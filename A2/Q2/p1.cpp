@@ -18,14 +18,15 @@ int main()
         char **ch;
         execv("p3", ch);
     }
-    int res = waitpid(pid1, NULL, 0);
+    int res = wait(&pid1);
     cout << res << " Program 2 quitting" << endl;
-    cout << waitpid(pid2, NULL, 0) << " Program 3 quitting" << endl;
+    cout << wait(&pid2) << " Program 3 quitting" << endl;
 
     if (res > 0)
     {
         cout << "This statement will only run Program 2 quits";
     }
+
     // deleting q2
     system("rm -f p2");
     system("rm -f p3");
