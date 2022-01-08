@@ -18,9 +18,9 @@ int main()
         char **ch;
         execv("p3", ch);
     }
-    int res = wait(&pid1);
+    int res = waitpid(pid1, NULL, 0);
     cout << res << " Program 2 quitting" << endl;
-    cout << wait(&pid2) << " Program 3 quitting" << endl;
+    cout << waitpid(pid2, NULL, 0) << " Program 3 quitting" << endl;
 
     if (res > 0)
     {
