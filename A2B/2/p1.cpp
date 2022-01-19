@@ -31,6 +31,8 @@ void InParent(int rfd, int wfd)
 
 int main()
 {
+    system("c++ p2.cpp -o p2");
+
     // index 0 -> Read FD
     // index 1 -> Write FD
     int pipe1fds[2], pipe2fds[2];
@@ -62,13 +64,11 @@ int main()
         // closing the writer of pipe 2
         close(pipe2fds[1]);
 
-        // mapping the read fd to read source, i.e. keyboard
-        dup2(pipe2fds[0], 0);
-        // mapping the write fd to write source, i.e. terminal
-        dup2(pipe1fds[1], 1);
+        char fds[2];
+        fds[0] = pipe2fds[0];
+        fds[1] = pipe1fds[1];
 
-        system("c++ p2.cpp -o p2");
-        char **ch;
-        execv("p2", ch);
+        char *argv[] = {"./p2", fds, NULL};
+        execv("./p2", argv);
     }
 }
