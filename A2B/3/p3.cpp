@@ -3,28 +3,23 @@
 #include <iostream>
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
-
-    // keeping a copy of rfd and wfd that has been copied to 0 and 1
-    int rfd = dup(0);
-    int wfd = dup(1);
-
-    // restoring the original fd of keyboard and terminal
-    dup2(open("/dev/tty", O_RDWR), 0);
-    dup2(open("/dev/tty", O_RDWR), 1);
+    int rfd = argv[1][0];
+    int wfd = argv[1][1];
 
     while (1)
     {
         int msgSize = 50;
         char msgIn[msgSize];
-        int n = read(rfd, msgIn, msgSize);
-
+        read(rfd, msgIn, msgSize);
+        cout << "In P3 from P1: " << msgIn << endl;
         // if no message
         if (strlen(msgIn) == 0)
+        {
+            cout << "Empty message from P1, exiting...";
             break;
-
-        cout << "P1 Said: " << msgIn << "\n";
+        }
         char msgOut[msgSize];
         cout << "Enter Message for P1: ";
         cin.getline(msgOut, msgSize);
@@ -34,7 +29,6 @@ int main()
         if (strlen(msgOut) == 0)
             break;
     }
-    cout << "P2 exiting...\n";
-    system("rm -f p3");
+    cout << "P3 exiting...\n";
     exit(0);
 }

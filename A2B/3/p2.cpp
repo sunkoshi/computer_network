@@ -3,50 +3,49 @@
 #include <iostream>
 using namespace std;
 
-void Proxy(int rP1, int wP1, int wP3, int rP3)
+void Proxy(int fromP1, int toP1, int fromP3, int toP3)
 {
     while (true)
     {
         int msgSize = 50;
         // proxy to read p3
         char mP3[msgSize];
-        read(rP1, mP3, msgSize);
-
+        read(fromP1, mP3, msgSize);
+        cout << "In P2 from P1 Proxy: " << mP3 << endl;
         // send to p3
-        write(wP3, mP3, strlen(mP3) + 1);
+        write(toP3, mP3, strlen(mP3) + 1);
         if (strlen(mP3) == 0)
             break;
 
         // proxy to read p3
         char mP1[msgSize];
-        read(rP3, mP1, msgSize);
+        read(fromP3, mP1, msgSize);
+        cout << "In P2 from P3 Proxy: " << mP1 << endl;
 
         // forward to p1
-        write(wP1, mP1, strlen(mP1) + 1);
+        write(toP1, mP1, strlen(mP1) + 1);
         if (strlen(mP1) == 0)
             break;
     }
+    cout << "P2 exiting..." << endl;
+    exit(0);
 }
 
-int main()
+int main(int argc, char **argv)
 {
 
-    int rP1 = dup(0);
-    int wP1 = dup(1);
+    system("g++ p3.cpp -o p3");
+    int rP1 = argv[1][0];
+    int wP1 = argv[1][1];
+    int pipe1fds[2], pipe2fds[2];
 
-    dup2(open("/dev/tty", O_RDWR), 0);
-    dup2(open("/dev/tty", O_RDWR), 1);
-
-    int pipe1fds[2];
-    int pipe2fds[2];
-
+    // this will open a pipe and assign the FDs to 0 and 1
     pipe(pipe1fds);
     pipe(pipe2fds);
 
     int pid = fork();
     if (pid > 0)
     {
-
         // in parent
 
         // closing the writer of pipe 1
@@ -54,7 +53,7 @@ int main()
 
         // closing the reader of pipe 2
         close(pipe2fds[0]);
-        Proxy(rP1, pipe2fds[1], pipe1fds[0], wP1);
+        Proxy(rP1, wP1, pipe1fds[0], pipe2fds[1]);
     }
     else
     {
@@ -66,16 +65,11 @@ int main()
         // closing the writer of pipe 2
         close(pipe2fds[1]);
 
-        // mapping the read fd to read source, i.e. keyboard
-        dup2(pipe2fds[0], 0);
-        // mapping the write fd to write source, i.e. terminal
-        dup2(pipe1fds[1], 1);
+        char fds[2];
+        fds[0] = pipe2fds[0];
+        fds[1] = pipe1fds[1];
 
-        system("c++ p3.cpp -o p3");
-        char **ch;
-        execv("p3", ch);
+        char *argv[] = {"./p3", fds, NULL};
+        execv("./p3", argv);
     }
-
-    cout << "P2 exiting..." << endl;
-    system("rm -f p2");
 }
