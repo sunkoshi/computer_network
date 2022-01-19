@@ -8,7 +8,7 @@ void InChild(int rfd, int wfd)
     {
         int msgSize = 50;
         char msgIn[msgSize];
-        int n = read(rfd, msgIn, msgSize);
+        read(rfd, msgIn, msgSize);
 
         // if no message
         if (strlen(msgIn) == 0)
