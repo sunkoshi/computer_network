@@ -26,7 +26,7 @@ int main()
     msg_st msg;
     msg.type = 1;
     strcpy(msg.msg_text, to_string(getpid()).c_str());
-    msgsnd(mqId, &msg, sizeof(msg), msg.type);
+    msgsnd(mqId, &msg, sizeof(msg), 0);
 
     msg.type = 3;
     msgrcv(mqId, &msg, sizeof(msg), msg.type, 0);

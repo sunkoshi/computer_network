@@ -31,7 +31,7 @@ int main()
 
         msg.type = i + 2;
         strcat(msg.msg_text, " - From P1");
-        msgsnd(mqId, &msg, sizeof(msg), msg.type);
+        msgsnd(mqId, &msg, sizeof(msg), 0);
     }
     msgctl(mqId, IPC_RMID, NULL);
     return 0;
