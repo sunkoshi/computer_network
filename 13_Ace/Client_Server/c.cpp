@@ -1,16 +1,11 @@
+#include "my_fns.h"
 #include <ace/SOCK_Acceptor.h>
 #include <ace/SOCK_Connector.h>
 #include <ace/SOCK_Stream.h>
-#include <ace/OS.h>
-#include <ace/SOCK_Dgram.h>
-#include <ace/OS_NS_unistd.h>
-#include <ace/Activation_Queue.h>
 #include <ace/Method_Request.h>
-#include <ace/Task.h>
 #include <ace/Future.h>
 #include <ace/Auto_Ptr.h>
 #include <ace/config-lite.h>
-#include <bits/stdc++.h>
 using namespace std;
 class Client
 {
@@ -25,9 +20,10 @@ public:
     {
         buffer = "Hello Server";
     }
-    void connectToServer()
+    int connectToServer()
     {
         connector.connect(client_stream_, serverAddr);
+        return client_stream_.get_handle();
     }
 
     void sendToServer()
@@ -46,6 +42,5 @@ int main(int argc, char *argv[])
     int port = 8080;
     Client client("127.0.0.1", port);
     client.connectToServer();
-    client.sendToServer();
     client.close();
 }
