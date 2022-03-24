@@ -9,7 +9,7 @@ int main()
     struct sockaddr_in client;
     client.sin_family = AF_INET;
     client.sin_addr.s_addr = inet_addr("127.0.0.1");
-    cout << "Enter required documents: ";
+    cout << "Documents: ";
     string reqDocs;
     cin >> reqDocs;
     sendto(rsfd, reqDocs.c_str(), reqDocs.size(), 0, (struct sockaddr *)&client, sizeof(client));
@@ -20,12 +20,12 @@ int main()
     while (1)
     {
         int nsfd = getFD(usfd);
-        cout << "CLIENT: ";
+        cout << "Recv: ";
         read(nsfd, buf, BUF_SIZE);
         cout << buf << endl;
         sendFD(usfd, nsfd);
         close(nsfd);
-        cout << "Enter VERDICT: ";
+        cout << "Tell your verdict: ";
         string ver;
         cin >> ver;
         cout << ver << endl;

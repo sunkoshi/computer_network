@@ -13,7 +13,7 @@ int main()
         int nusfd = accept(usfd, NULL, NULL);
         nusfds.push_back(nusfd);
     }
-    cout << "A, B and C are connected to S\n";
+    cout << "All services connected to S\n";
 
     int rsfd = RawSockServer(0);
     for (int i = 0; i < 3; i++)
@@ -21,7 +21,7 @@ int main()
         sendFD(nusfds[i], rsfd);
         getFD(nusfds[i]);
     }
-    cout << "rsfd has been sent to A, B and C\n";
+    cout << "sending rsfd\n";
 
     int sfd = SockServer(8000);
     listen(sfd, 10);
@@ -29,7 +29,6 @@ int main()
     {
         int nsfd = accept(sfd, NULL, NULL);
         nsfds.push_back(nsfd);
-        cout << "New client connected...\n";
         for (int i = 0; i < 3; i++)
         {
             sendFD(nusfds[i], nsfd);

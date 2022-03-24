@@ -14,7 +14,7 @@ int main()
         cout << (buff + (ip->ip_hl) * 4) << endl;
     }
     int sfd = ConnectToTcpServer("127.0.0.1", 8000);
-    cout << "Required Documents: ";
+    cout << "Document: ";
     for (int i = 0; i < 3; i++)
     {
         string reqDocs;

@@ -58,35 +58,13 @@
 #include <sys/msg.h>
 #include <bits/stdc++.h>
 using namespace std;
-#define UDS_SERVER_PATH "./uds.soc"
+#define UDS_SERVER_PATH "./uds.so"
 
 struct ServerData
 {
     string ip;
     int port;
 };
-
-string ReadFD(int fd)
-{
-    string s = "";
-    char ch;
-    while (true)
-    {
-        int n = read(fd, &ch, 1);
-        if (n <= 0 || ch == '\0')
-        {
-            break;
-        }
-        s.push_back(ch);
-    }
-    return s;
-}
-
-int WriteFD(int fd, string s)
-{
-    s.push_back('\0');
-    return send(fd, s.c_str(), s.size(), 0);
-}
 
 int UdsServer(string sun_file)
 {
@@ -108,7 +86,7 @@ int UdsServer(string sun_file)
         perror("bind");
         exit(EXIT_FAILURE);
     }
-    cout << "Initiated UDS server" << endl;
+    cout << "UDS server running" << endl;
     return usfd;
 }
 
@@ -123,22 +101,18 @@ int SockServer(int PORT)
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
-    cout << "Created socket.." << endl;
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(PORT);
 
-    // binding the address to sfd
     if (bind(sfd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
-    cout << "Binded socket to address.." << endl;
     return sfd;
 }
 
-// to connect to a tcp server
 int ConnectToTcpServer(string ip, int PORT)
 {
     struct sockaddr_in address;
@@ -157,19 +131,14 @@ int ConnectToTcpServer(string ip, int PORT)
         perror("inet_pton");
         exit(EXIT_FAILURE);
     }
-
-    cout << "Connecting to the server ..." << endl;
-    // connect the client socket to server socket
     if (connect(csfd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         perror("connect");
         cout << "Connection failed," << ip << " " << PORT << endl;
     }
-    printf("Connection established with ip: %s, port:%d\n", ip.c_str(), PORT);
     return csfd;
 }
 
-// connect to uds server
 int ConnectToUdsServer(string sun_file)
 {
     struct sockaddr_un address;
@@ -184,15 +153,12 @@ int ConnectToUdsServer(string sun_file)
     address.sun_family = AF_UNIX;
     strcpy(address.sun_path, sun_file.c_str());
 
-    cout << "Connecting to the server ..." << endl;
-    // connect the client socket to server socket
     if (connect(usfd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         perror("connect");
         cout << "Connection failed," << sun_file << endl;
         exit(1);
     }
-    printf("Connection established..\n");
     return usfd;
 }
 
