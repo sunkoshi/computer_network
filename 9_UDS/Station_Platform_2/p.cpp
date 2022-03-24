@@ -18,7 +18,7 @@
 #include <sys/un.h>
 #include "my_fh.h"
 using namespace std;
-#define MAXLINE 1024
+#define MAXLINE 4098
 void printPayload(struct ip *iph, unsigned char *tempBuff, int packetSize)
 {
     unsigned short ip_head_len = iph->ip_hl * 4;

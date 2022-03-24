@@ -16,7 +16,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define PORT 8080
-#define MAXLINE 1024
+#define MAXLINE 4098
 #define MSG_CONFIRM 0x800
 int main()
 {
