@@ -23,35 +23,30 @@
 using namespace std;
 #define PORT 8080
 #define MAXLINE 4096
-void printPayload(struct ip *iph, unsigned char *tempBuff, int packetSize)
+void printPayload(struct ip *iph, unsigned char *tempBuff)
 {
     cout << "Payload: ";
-    unsigned short ip_head_len = iph->ip_hl * 4;
-    struct tcphdr *tcp_head = (struct tcphdr *)(tempBuff + ip_head_len);
-    unsigned char *buf = tempBuff + ip_head_len + tcp_head->th_off * 4;
-    size_t length = (packetSize - tcp_head->th_off * 4 - iph->ip_hl * 4);
-
-    for (size_t i = 0; i < length; i++)
-    {
-        if (i != 0 && i % 16 == 0)
-        {
-            for (size_t j = (i - 16); j < i; j++)
-            {
-                if (buf[j] >= 32 && buf[j] <= 128)
-                {
-                }
-            }
-            printf("\n");
-        }
-
-        cout << buf[i];
-
-        if (i == (length - 1))
-        {
-            printf("\n");
-        }
-    }
+    cout << tempBuff + iph->ip_hl * 4 << endl;
 }
+
+void printIPHeader(struct ip *ip)
+{
+    cout << "------------------------\n";
+    cout << "Printing IP header....\n";
+    cout << "IP version:" << (unsigned int)ip->ip_v << endl;
+    cout << "IP header length:" << (unsigned int)ip->ip_hl << endl;
+    cout << "Type of service:" << (unsigned int)ip->ip_tos << endl;
+    cout << "Total ip packet length:" << ntohs(ip->ip_len) << endl;
+    cout << "Packet id:" << ntohs(ip->ip_id) << endl;
+    cout << "Time to leave :" << (unsigned int)ip->ip_ttl << endl;
+    cout << "Protocol:" << (unsigned int)ip->ip_p << endl;
+    cout << "Check:" << ip->ip_sum << endl;
+    cout << "Source ip:" << inet_ntoa(*(in_addr *)&ip->ip_src) << endl;
+    cout << "Destination ip:" << inet_ntoa(*(in_addr *)&ip->ip_dst) << endl;
+    cout << "End of IP header\n";
+    cout << "------------------------\n";
+}
+
 int main()
 {
     int sfd;
@@ -86,7 +81,8 @@ int main()
         for (int i = 0; i < MAXLINE; i++)
             tempBuff[i] = buffer[i];
         struct ip *iph = (struct ip *)buffer;
-        printPayload(iph, tempBuff, packetSize);
+        printIPHeader(iph);
+        printPayload(iph, tempBuff);
         memset(buffer, 0, MAXLINE);
     }
     return 0;
