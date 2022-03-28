@@ -1,0 +1,12 @@
+1 . Compile all
+2 . Run s
+3 . Run a in 2 terminals
+4 . Run run e  
+5 . Run c
+6.  Run p and put pipe no. as 1 
+6.  Run p in another and put pipe no. as 2 
+6.  Run p in another and put pipe no. as 3 
+7.  Put any data in p with no.1, all 'a' will get it
+7.  Put any data in p with no.2, all 'a' will get it
+7.  Put any data in p with no.3, all 'c' will be transferred to 'e'
+8.  Type anything in 'c', e will reply it
