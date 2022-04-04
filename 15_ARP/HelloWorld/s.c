@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     src_ip = allocate_strmem(INET_ADDRSTRLEN);
 
     // Interface to send packet through.
-    strcpy(interface, "eno1");
+    strcpy(interface, "enp5s0");
 
     // Submit request for a socket descriptor to look up interface.
     if ((sd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
@@ -110,7 +110,7 @@ int main(int argc, char **argv)
     strcpy(src_ip, "69.69.69.69");
 
     // Destination URL or IPv4 address (must be a link-local node): you need to fill this out
-    strcpy(target, "172.30.105.242"); // this is some guy from my LAN, idk who
+    strcpy(target, "172.30.142.18"); // this is some guy from my LAN, idk who
 
     // Fill out hints for getaddrinfo().
     memset(&hints, 0, sizeof(struct addrinfo));
